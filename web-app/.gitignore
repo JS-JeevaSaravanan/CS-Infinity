@@ -38,14 +38,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-# Ignore Obsidian's local configuration files
-**/.obsidian/
-
-# Ignore cache and workspace files
-*.log
-*.bak
-*.swp
-*.tmp
-
-# macOS stuff
-.DS_Store
