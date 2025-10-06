@@ -15,6 +15,32 @@ There are several ways to manage feature flags:
 
 
 
+# 🧰 **5. Implementation Approaches**
+
+There are a few ways to implement feature flags:
+
+### 1. **Manual Config (JSON / Config Maps)**
+
+- Simple to start with.
+    
+- Uses configuration files or properties to manage flags.
+    
+- **Limitation:** Requires manual edits and lacks usage tracking.
+    
+
+### 2. **Feature Flag Services**
+
+- A **managed platform** for controlling flags (e.g., LaunchDarkly, IBM App Config).
+    
+- Benefits include:
+    
+    - Centralized control and visibility.
+        
+    - No code changes or redeployments needed.
+        
+    - **Audit trails** and **usage analytics** for better governance.
+- 
+
 ## 🧩 **Implementing Feature Flags**
 
 There are two main approaches:
@@ -60,3 +86,25 @@ else:
 The condition checks a **flag value** — which could live in a database, config file, or remote service — to decide which code path to execute.
 
 
+---
+
+# 🧩 **11. Managing Multiple Flags**
+
+As usage grows, you might have many flags across:
+
+- Multiple apps
+    
+- Several web pages
+    
+- Different feature types
+    
+
+A **feature flag management service** lets you:
+
+- Group flags into **collections**
+    
+- Organize them by **application** or **purpose**
+    
+- Maintain a clean, auditable overview of all active toggles
+
+---

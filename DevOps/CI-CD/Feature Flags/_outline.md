@@ -11,16 +11,14 @@
 
 Recommended {
 
-[Feature flag in software and its usefulness](https://youtu.be/ZcU11jQffvw)
-
-
 }
 
-Reffered {
 
+Referred {
 
-[Feature toggles in short](https://youtu.be/c8KgKTgyFUE?si=fLv22666dQ98HNhK)
+[Feature flag in software and its usefulness](https://youtu.be/ZcU11jQffvw)
 
+[Feature flag with usecasese](https://youtu.be/AJa2B-twtG4)
 
 }
 
