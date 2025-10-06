@@ -14,6 +14,9 @@
 [[flags analytics]]
 
 
+[[incidents]]
+
+
 Recommended {
 
 [Feature flags - senior dev @Kayal](https://youtu.be/VBCYqp8l3Lc)
