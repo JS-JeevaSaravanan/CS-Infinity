@@ -107,3 +107,82 @@ This adds **temporal control**, ensuring features activate or expire on schedule
 
 ---
 
+
+
+## 8️⃣ Advanced Feature Flag Rules
+
+Flags can be more than true/false. They can depend on:
+
+- **User Roles:** Admins, Testers, Beta users
+    
+- **Percent Rollouts:** e.g., 25% of users
+    
+- **Attributes:** Geography, account type, etc.
+    
+
+### Example (in code)
+
+```js
+const featureFlags = {
+  newDashboard: [
+    { role: ['admin', 'tester'] },
+    { percentage: 25 }
+  ]
+};
+```
+
+### Logic Example
+
+```js
+function canViewFeature(user, flagRules) {
+  // Check role & percentage eligibility
+}
+```
+
+---
+
+## 9️⃣ How Percentage Rollouts Work (Deterministic Hashing)
+
+- Combine **Feature Name + User ID**
+    
+- Hash → produce a number between 0 and 1
+    
+- Compare with rollout %  
+    → e.g., if < 0.25 → user sees feature
+    
+
+Ensures:
+
+- Same user sees consistent experience
+    
+- Equal random distribution
+    
+
+---
+
+## 🔟 Real-World Use Case: Safe Query Refactors
+
+- Have two SQL queries (old vs new)
+    
+- Wrap new query behind a flag
+    
+- Compare both results silently
+    
+- Confidently migrate to new logic once validated
+    
+
+```js
+if (flags.useOptimizedQuery) {
+  products = runNewQuery();
+  compareResults(products, oldProducts);
+}
+```
+
+---
+
+
+Perfect — here’s a **crisp, modern, and technically deep** explanation of **Percentage Rollouts using Deterministic Hashing**, including **how it works**, **different implementation methods**, and **the modern (current) approach developers use today**, all with clean code snippets 👇
+
+---
+
+

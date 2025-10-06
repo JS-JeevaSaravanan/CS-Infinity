@@ -2,14 +2,19 @@
 
 
 
-[[what feature flags]]
-[[flags usecases]]
+[[what & why feature flags]]
 [[implementation details]]
-[[Flag practices]]
+[[Flag pitfalls and maintaniances]]
+
+
 [[Flags examples]]
+[[flags rollouts]]
+[[flags analytics]]
 
 
 Recommended {
+
+[Feature flags - senior dev @Kayal](https://youtu.be/VBCYqp8l3Lc)
 
 }
 
