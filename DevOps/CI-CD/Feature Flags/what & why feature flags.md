@@ -6,6 +6,8 @@
 * used in any apps ( desktop, frontend , backend, microservices, mobile , web) - runtime control over features
 * also called feature toggle
 
+- The basic idea: decoupling deployment from release
+
 
 
 Feature Flags (a.k.a. Feature Toggles) are conditional switches in code that control whether a feature is active or hidden — _without requiring redeployment._
