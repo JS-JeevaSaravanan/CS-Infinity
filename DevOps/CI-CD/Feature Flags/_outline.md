@@ -3,8 +3,10 @@
 
 
 [[what & why feature flags]]
+[[flag types]]
 [[implementation details]]
-[[Flag pitfalls and maintaniances]]
+[[Flag pitfalls and maintainances]]
+[[flags future integrations]]
 
 
 [[Flags examples]]
