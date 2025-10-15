@@ -618,3 +618,4 @@ Vite represents a **shift in frontend tooling philosophy**:
 💬 _In short: Vite isn’t just a faster Webpack — it’s a smarter, simpler, and more modern way to build web apps._
 
 ---
+
