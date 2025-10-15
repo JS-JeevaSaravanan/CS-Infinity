@@ -1,5 +1,7 @@
 
 
+[[Vite full]]
+
 [[intro]]
 
 [[core concepts]]
