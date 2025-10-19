@@ -1,7 +1,7 @@
 
 [[Module bundlers]]
 [[Webpack]]
-[[Vite]]
+[[Vite/Vite full]]
 
 [[Webpack, Turbopack, and Vite]]
 
