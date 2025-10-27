@@ -8,7 +8,7 @@
 
 
 [[Binary Trees]]
-[[Binary Search]]
+[[JavaScript/JS DSA HandsOnProbs/Binary Search]]
 
 [[Array items]]
 

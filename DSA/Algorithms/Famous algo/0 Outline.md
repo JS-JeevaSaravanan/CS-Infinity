@@ -9,11 +9,11 @@ Noted
 
 
 [[Search]]
-[[Famous algo/Sort]]
+[[DSA/Algorithms/Famous algo/Sort]]
 [[Greedy]]
 
 
-[[Big O]]
+[[DSA/Algorithms/Famous algo/Big O]]
 
 
 
