@@ -1,11 +1,11 @@
 
 
 
-[[_refs]]
+[[Programming/Paradigms/Functional/_refs]]
 
 
 
-[[intro]]
+[[Programming/Paradigms/Functional/intro]]
 
 
 

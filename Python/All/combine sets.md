@@ -59,6 +59,4 @@ print(set1)  # Output: {1, 2, 3, 4, 5}
 
 This modifies `set1` in place, adding the unique elements from `set2`.
 
-### Summary
-You can use the `union()` method, the `|` operator, or the `update()` method to perform set unions in Python. Each method is useful depending on whether you want to create a new set or modify an existing one.
 

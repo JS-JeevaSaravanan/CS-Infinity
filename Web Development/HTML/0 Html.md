@@ -5,7 +5,7 @@
 
 [[Web Development/HTML/Intro]]
 
-[[Basics]]
+[[Web Development/HTML/Basics]]
 [[Semantic HTML]]
 [[Meta tags]]
 
