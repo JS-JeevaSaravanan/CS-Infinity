@@ -218,3 +218,46 @@ Here’s a concise overview of **HTTP Messages**, including essential concepts a
 
 By mastering these points, you’ll be well-prepared for discussions on HTTP messages in a technical interview. Let me know if you have more topics or need further assistance!
 
+---
+
+
+## HTTP Status codes
+
+200 vs 204
+
+The key difference between HTTP status codes **200 OK** and **204 No Content** is whether the response includes a body (content). Both codes signal that a request was successfully processed, but their implications for the client are distinct.
+
+|**Feature**|**200 OK**|**204 No Content**|
+|---|---|---|
+|**Meaning**|The request succeeded, and the server is **sending the requested content** in the response body.|The request succeeded, but the server has **no content** to send in the response body.|
+|**Response Body**|**Must** include a message body (e.g., HTML, JSON data).|**Must NOT** include a message body.|
+|**Common Use**|**GET** requests (fetching data), **POST** requests (often for creation, returning the new resource or a result).|**DELETE** requests, **PUT/PATCH** requests for updates where the client doesn't need the updated resource back, or for background actions.|
+|**Client Behavior**|The client processes and/or displays the content in the response body (e.g., refreshing the page, updating data).|The client typically **maintains its current view** or document. It knows the action succeeded but doesn't need to process new data.|
+
+---
+
+## 200 OK Use Cases
+
+The **200 OK** status code is the most common and is used when a successful request returns data to the client.
+
+- **GET** requests: Retrieving a webpage, a JSON object from an API, or an image.
+    
+- **POST** requests: If the server successfully creates a resource and immediately returns the newly created resource or a status object with data.
+    
+
+---
+
+## 204 No Content Use Cases
+
+The **204 No Content** status code is used for successful operations where there is no need to navigate the user away from the current page or return any new data.
+
+- **DELETE** requests: An API endpoint successfully deletes a resource. There is nothing left to return.
+    
+- **PUT/PATCH** requests: An API endpoint successfully updates a resource, and the client already has the new data (or can assume the update worked) and doesn't need the server to send the full updated resource back. This is common in modern single-page applications for "save and continue editing" features.
+    
+- **Form Submissions (AJAX)**: A successful background submission of data (like a setting change) where the page shouldn't refresh.
+    
+
+Using **204** in these scenarios is more efficient as it saves bandwidth and processing time by explicitly telling the client there is no response body to parse.
+
+---
