@@ -13,6 +13,9 @@
 [[Throttling]]
 
 
+[[Permission handling]]
+
+
 [[Download Strategies]]
 
 
