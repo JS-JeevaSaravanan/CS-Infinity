@@ -190,3 +190,16 @@ Track who accessed/modified what.
 Users get only what they need.
 
 ---
+
+
+
+reffered to jot {
+
+https://www.youtube.com/watch?v=5GG-VUvruzE
+
+https://www.youtube.com/watch?v=9JPnN1Z_iSY
+
+https://www.youtube.com/watch?v=wnSArmbI6qw
+
+
+}
