@@ -13,10 +13,14 @@ https://www.dennisokeeffe.com/blog/2024-07-14-creating-a-result-type-in-typescri
 https://jaketrent.com/post/error-handling-result-type/
 
 
+https://arg-software.medium.com/functional-error-handling-in-typescript-with-the-result-pattern-5b96a5abb6d3
+
 
 go handling
 https://go.dev/blog/error-handling-and-go
 
 rust handling
 https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html
+
+
 

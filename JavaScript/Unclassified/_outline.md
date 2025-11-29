@@ -14,3 +14,5 @@
 [[class validator vs zod]]
 
 [[result pattern]]
+
+[[Effect ts]]
