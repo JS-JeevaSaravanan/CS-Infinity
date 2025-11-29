@@ -12,3 +12,5 @@
 [[time zones and Conversions]]
 
 [[class validator vs zod]]
+
+[[result pattern]]
