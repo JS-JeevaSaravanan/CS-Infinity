@@ -317,3 +317,24 @@ https://mingyang-li.medium.com/neverthrow-elegant-error-handling-in-node-js-func
 
 https://github.com/vultix/ts-results
 
+
+
+
+to check {
+
+never throw
+
+
+https://www.youtube.com/watch?v=Y6jT-IkV0VM
+
+https://www.youtube.com/watch?v=AdmGHwvgaVs
+
+
+Effect
+
+https://www.youtube.com/watch?v=F5aWLtEdNjE
+
+https://www.youtube.com/watch?v=fTN8BX5qj6s
+
+
+}
