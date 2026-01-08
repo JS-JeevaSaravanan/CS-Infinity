@@ -93,3 +93,11 @@ https://www.youtube.com/watch?v=uBc-p-2ipkc
 JWT simplifies secure data exchange but requires careful implementation to mitigate risks and ensure robust security.
 
 
+
+
+seen , to joit {
+
+JWT 
+https://www.youtube.com/watch?v=L3A-76OXJB8
+
+}
