@@ -9,3 +9,5 @@
 [[manifest]]
 
 [[Timezone Handling Best Practices]]
+
+[[bun and terminal things]]
