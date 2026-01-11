@@ -15,3 +15,14 @@
     
     - Use versioned URLs (`/v1/resource`) or headers (`Accept: application/vnd.api.v1+json`).
 
+
+
+random {
+
+character encoding
+
+UTF8 vs Unicode - best referred
+https://youtu.be/i90D9irbc04?si=-u_S1Fv4dweSk5lT
+
+
+}

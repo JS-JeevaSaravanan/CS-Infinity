@@ -531,3 +531,17 @@ failed.forEach(f => console.error(f.error, f.entity));
 
 
 
+TO check {
+
+
+https://www.postgresql.org/docs/current/sql-copy.html
+
+https://docs.mulesoft.com/mule-runtime/latest/batch-error-handling-faq
+
+https://stackoverflow.com/questions/1340062/handling-errors-and-feedback-when-performing-bulk-operations-in-a-multi-tiered-a
+
+https://app.studyraid.com/en/read/11939/380666/error-handling-in-bulk-operations
+
+https://apps2fusion.com/errors-handling-in-bulk-collect-and-forall-using-sqlbulk_exceptions/
+
+}
