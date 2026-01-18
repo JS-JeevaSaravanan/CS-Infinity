@@ -722,3 +722,11 @@ https://www.youtube.com/watch?v=Y6jT-IkV0VM
 }
 
 
+python errors. {
+
+https://www.youtube.com/watch?v=JG1livF44_E
+
+https://www.youtube.com/watch?v=YA0Wq1rcs6U
+
+
+}

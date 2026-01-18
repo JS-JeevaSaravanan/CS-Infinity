@@ -13,9 +13,4 @@
 
 [[class validator vs zod]]
 
-[[Error handling]]
-
-[[result pattern]]
-
-[[Effect ts]]
 
