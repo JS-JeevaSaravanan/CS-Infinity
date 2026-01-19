@@ -730,3 +730,240 @@ https://www.youtube.com/watch?v=YA0Wq1rcs6U
 
 
 }
+
+---
+---
+---
+
+
+ **TypeScript is _not_ the only language with “non-exception” (explicit) error handling**.  
+In fact, **TypeScript is late to the party** 😄. Many languages were designed _around_ this idea.
+
+Let’s put it in perspective.
+
+---
+
+## First: clarify the idea
+
+By “non error handling built in” you mean:
+
+> **Errors are returned as values and tracked by the type system, instead of being thrown as exceptions**
+
+Examples:
+
+- `Result<T, E>`
+    
+- `(value, error)`
+    
+- `Option / Maybe`
+    
+
+---
+
+## Languages with this built in (by design)
+
+### 🦀 Rust
+
+```rust
+fn get_user(id: i32) -> Result<User, UserError> {
+  ...
+}
+```
+
+- Errors are **part of the function signature**
+    
+- Compiler forces handling
+    
+- No unchecked exceptions
+    
+
+✅ Gold standard for typed error handling
+
+---
+
+### 🟢 Go
+
+```go
+user, err := getUser(id)
+if err != nil {
+  return err
+}
+```
+
+- Simple and explicit
+    
+- No exceptions for normal flow
+    
+- Verbose, but predictable
+    
+
+---
+
+### ✨ Gleam
+
+```gleam
+fn get_user(id: Int) -> Result(User, UserError) {
+  ...
+}
+```
+
+- Pure functional
+    
+- Pattern matching for errors
+    
+- No runtime exceptions in normal flow
+    
+
+---
+
+### 🔵 Elixir / Erlang
+
+```elixir
+{:ok, user} = get_user(id)
+{:error, :not_found}
+```
+
+- Tagged tuples
+    
+- Fault-tolerant by design
+    
+- Exceptions are rare and intentional
+    
+
+---
+
+### 🧠 Haskell
+
+```haskell
+getUser :: Int -> Either UserError User
+```
+
+- Fully typed
+    
+- Extremely expressive
+    
+- Steep learning curve
+    
+
+---
+
+### 🧪 OCaml / ReasonML
+
+```ocaml
+('a, 'e) result
+```
+
+- Strong type inference
+    
+- No runtime surprises
+    
+- Very robust for large systems
+    
+
+---
+
+### 🟣 Swift
+
+```swift
+func getUser() throws -> User
+```
+
+Swift is interesting:
+
+- `throws` is **part of the type**
+    
+- Compiler enforces handling
+    
+- Still uses exceptions, but _typed_
+    
+
+---
+
+### 🟡 Kotlin
+
+```kotlin
+sealed class Result<out T>
+```
+
+- Uses algebraic data types
+    
+- Works well with FP style
+    
+- Java interop limits it slightly
+    
+
+---
+
+## What about JavaScript & TypeScript?
+
+### JavaScript
+
+- ❌ No built-in typed error handling
+    
+- ❌ Exceptions are untyped
+    
+- ❌ `throw` breaks control flow invisibly
+    
+
+### TypeScript
+
+- ❌ Cannot express thrown error types
+    
+- ❌ `throws` does not exist
+    
+- ✅ Can _model_ errors with types (`Result`, unions)
+    
+
+That’s why libraries exist:
+
+- `neverthrow`
+    
+- `effect`
+    
+- custom `Result` implementations
+    
+
+---
+
+## Big insight (important)
+
+> **JavaScript chose exceptions because it was designed for small scripts, not large systems.**
+
+TypeScript added types later — but:
+
+- You can’t retroactively type `throw`
+    
+- Backward compatibility prevents fixing this
+    
+
+---
+
+## Summary table
+
+|Language|Typed errors built in|Uses exceptions?|
+|---|---|---|
+|Rust|✅ Yes|❌ No|
+|Go|✅ Yes|❌ No|
+|Gleam|✅ Yes|❌ No|
+|Elixir|✅ Yes|⚠ Rare|
+|Haskell|✅ Yes|❌ No|
+|Swift|✅ Yes|⚠ Typed|
+|Kotlin|✅ Yes|⚠ Mixed|
+|TypeScript|❌ (library-only)|✅ Yes|
+|JavaScript|❌ No|✅ Yes|
+
+---
+
+## Final takeaway
+
+> **TypeScript doesn’t truly have built-in non-exception error handling — it only _simulates_ it.**
+
+Languages like **Rust, Gleam, Go, and Elixir** were designed _from day one_ to make errors explicit and unavoidable.
+
+This is exactly why JS devs who learn:
+
+- Rust → say “errors finally make sense”
+    
+- Gleam → say “this feels like typed JS done right”
+    
+
