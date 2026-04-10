@@ -6,3 +6,4 @@
 [[Diff between branches]]
 [[Delete branches]]
 
+[[branch rename]]
