@@ -1594,4 +1594,1294 @@ If you're working in a specific system (Spark, Hive, Postgres, etc.), I can tail
 
 
 
+# GitHub Actions Time-Based PR Merge Control - Complete Learnings
+
+  
+
+## Executive Summary
+
+  
+
+**Problem**: Prevent accidental production merges during Boston business hours (9 AM - 6 PM ET, Mon-Fri) in healthcare application.
+
+  
+
+**Solution**: Comment-based approval system where team members type exact phrase to confirm intentional merge during work hours.
+
+  
+
+**Key Innovation**: Optimized from naive implementation to production-grade through:
+
+- Webhook payload usage (eliminated unnecessary API calls)
+
+- Label event filtering (reduced CI waste by 90%)
+
+- Proper step ordering (UX feedback before failure)
+
+- Minimal permissions (only what's actually needed)
+
+  
+
+**Result**: Zero-permission-bloat, fast, resource-efficient, compliance-ready workflow.
+
+  
+
+---
+
+  
+
+## Problem Context
+
+Block PR merges to production during business hours without explicit human confirmation to prevent accidental production changes.
+
+  
+
+**Requirements:**
+
+- Time-aware (Boston timezone, 9 AM - 6 PM, Mon-Fri)
+
+- Human confirmation required
+
+- Audit trail of approvals
+
+- Self-service (not admin-only)
+
+- Flexible (PR creator or team can approve)
+
+  
+
+---
+
+  
+
+## Approach Evaluation
+
+  
+
+### 1. GitHub Environments + Required Reviewers
+
+  
+
+**What it is**: Native GitHub feature for deployment approval gates.
+
+  
+
+**Pros**:
+
+- ✅ Built into GitHub
+
+- ✅ Clear audit trail
+
+- ✅ No custom code
+
+  
+
+**Cons**:
+
+- ❌ Only works for **deployments**, not PR merges
+
+- ❌ Still allows PR merge, just blocks deploy step
+
+- ❌ Doesn't solve blocking merge itself
+
+  
+
+**Learning**: GitHub Environments are for deployment gates in workflow jobs, not for blocking PR merge button. Wrong tool for this requirement.
+
+  
+
+---
+
+  
+
+### 2. Time-Based Auto-Block (No Override)
+
+  
+
+**What it does**: Workflow checks current time and fails during business hours.
+
+  
+
+**Pros**:
+
+- ✅ Simple implementation
+
+- ✅ Fully automated
+
+- ✅ No human interaction needed
+
+  
+
+**Cons**:
+
+- ❌ No override mechanism for urgent fixes
+
+- ❌ Too rigid for production scenarios
+
+- ❌ Doesn't capture human confirmation
+
+  
+
+**Learning**: Pure time-based blocks are too inflexible for real-world production. Always need escape hatch for critical issues.
+
+  
+
+---
+
+  
+
+### 3. Label-Based Approval
+
+  
+
+**How it works**:
+
+1. PR opened during work hours → Status check fails
+
+2. Add `merge-approved` label → Triggers `labeled` event
+
+3. Status check re-runs → Checks if label exists → Passes
+
+  
+
+**Key Mechanism**:
+
+- Use `labeled`/`unlabeled` in PR trigger types
+
+- Fetch labels via `issues.listLabelsOnIssue()` API
+
+- Check if specific label exists in returned array
+
+  
+
+**Pros**:
+
+- ✅ Native GitHub UX (labels are standard)
+
+- ✅ Clear visual indicator on PR
+
+- ✅ Self-service for authorized users
+
+- ✅ Audit trail (GitHub tracks who added label, when)
+
+- ✅ Can restrict who can add label via permissions
+
+- ✅ **Auto re-triggers check** when label added (unlike comments)
+
+  
+
+**Cons**:
+
+- ❌ Less explicit (just clicking a label)
+
+- ❌ Doesn't capture intent in words
+
+- ❌ Can be added accidentally
+
+- ❌ Requires label creation (one-time setup)
+
+  
+
+**Learning**: Labels provide good visual state AND auto-trigger status re-runs (via `labeled` event). However, lack explicit confirmation. Good for simple workflows, not for requiring deliberate intent.
+
+  
+
+---
+
+  
+
+### 4. Comment-Based Approval ✅ CHOSEN
+
+  
+
+**How it works**:
+
+4. PR opened during work hours → Status check fails
+
+5. Team member comments exact phrase: "I agree to push this changes in working hours"
+
+6. Workflow verifies authorization → Status check passes
+
+  
+
+**Pros**:
+
+- ✅ **Explicit intent** - Must type full phrase
+
+- ✅ **Audit trail** - GitHub records approver, timestamp, exact comment
+
+- ✅ **Authorization check** - Verifies write access programmatically
+
+- ✅ **Visible** - Approval in PR conversation
+
+- ✅ **Flexible** - PR creator OR any team member can approve
+
+- ✅ **Self-service** - No bottleneck on specific approvers
+
+  
+
+**Cons**:
+
+- ❌ Requires exact phrase match (typos break it)
+
+- ❌ Status check doesn't auto re-run after comment
+
+- ❌ More complex workflow logic
+
+  
+
+**Why chosen**: Healthcare context requires **explicit, auditable confirmation**. Typing full phrase ensures deliberate decision, not accidental click.
+
+  
+
+---
+
+  
+
+## Technical Learnings
+
+  
+
+### 1. Timezone Handling in GitHub Actions
+
+  
+
+**Challenge**: GitHub Actions runners use UTC by default.
+
+  
+
+**Solution**: Use `TZ` environment variable with bash `date` command for timezone conversion.
+
+  
+
+**Learning**: Don't rely on runner's system timezone. Always explicitly set timezone for business-hours checks.
+
+  
+
+---
+
+  
+
+### 2. Branch-Specific Workflow Triggers
+
+  
+
+**Challenge**: Apply controls only to specific branch (e.g., production).
+
+  
+
+**Solution**: Use `branches` filter in workflow trigger.
+
+  
+
+**Learning**: Scope workflows to specific branches. Prevents unnecessary runs and keeps controls targeted where needed.
+
+  
+
+---
+
+  
+
+### 3. Checking PR Labels
+
+  
+
+**Challenge**: Check if specific label exists on PR.
+
+  
+
+**API**: `issues.listLabelsOnIssue()` - returns array of all labels
+
+  
+
+**Learning**: PRs are treated as issues in GitHub API. Use issues endpoints for labels and comments.
+
+  
+
+---
+
+  
+
+### 4. Searching PR Comments
+
+  
+
+**Challenge**: Check if approval comment exists.
+
+  
+
+**API**: `issues.listComments()` - returns all comments on PR
+
+  
+
+**Learning**: Search through comments array for exact phrase matching. Case-sensitive by default.
+
+  
+
+---
+
+  
+
+### 5. Authorization Verification
+
+  
+
+**Challenge**: Verify commenter has permission to approve.
+
+  
+
+**API**: `repos.getCollaboratorPermissionLevel()` - returns permission level
+
+  
+
+**Permission Levels**: `admin`, `maintain`, `write`, `read`, `none`
+
+  
+
+**Learning**: Programmatically verify authorization to prevent unauthorized approvals. Don't trust comment alone.
+
+  
+
+---
+
+  
+
+### 6. UX Feedback with Emoji Reactions
+
+  
+
+**Challenge**: Provide immediate visual feedback.
+
+  
+
+**API**: `reactions.createForIssueComment()` with content like `+1`, `confused`, `heart`
+
+  
+
+**Learning**: Emoji reactions provide instant feedback without cluttering conversation. Good for approval/rejection signals.
+
+  
+
+---
+
+  
+
+### 7. Filtering PR vs Issue Comments
+
+  
+
+**Challenge**: `issue_comment` event fires for both issues and PRs.
+
+  
+
+**Solution**: Check `github.event.issue.pull_request` field (null for issues, has data for PRs)
+
+  
+
+**Learning**: Always filter when using `issue_comment` event to avoid running on wrong entity type.
+
+  
+
+---
+
+  
+
+### 8. Getting PR Target Branch from Comment Event
+
+  
+
+**Challenge**: Comment event doesn't include full PR details.
+
+  
+
+**API**: Must fetch PR separately using `pulls.get()` to access `base.ref` and `head.ref`
+
+  
+
+**Learning**: Comment payload is minimal. Need additional API call for PR metadata like target branch.
+
+  
+
+---
+
+  
+
+### 9. Status Check Re-run Problem
+
+  
+
+**Key Difference**:
+
+  
+
+| Approach | Auto Re-run? | Reason |
+
+|----------|--------------|---------|
+
+| **Label-based** | ✅ YES | `labeled` event triggers PR workflow |
+
+| **Comment-based** | ❌ NO | `issue_comment` doesn't re-trigger PR checks |
+
+  
+
+**Workarounds for Comment-Based**:
+
+- Empty commit (most common)
+
+- Label manipulation
+
+- Close/reopen PR
+
+  
+
+**Learning**: This is a significant UX advantage for label-based. `labeled`/`unlabeled` events DO trigger PR workflows, but `issue_comment` does NOT.
+
+  
+
+---
+
+  
+
+### 10. Multiple Coordinated Workflows
+
+  
+
+**Pattern**: Split concerns across workflows with different triggers.
+
+  
+
+**Example**:
+
+- Workflow A (on `pull_request`): Status check that blocks/allows
+
+- Workflow B (on `issue_comment`): Handles approval and provides feedback
+
+  
+
+**Learning**: Separate workflows by responsibility and trigger type. Better maintainability and clearer purpose.
+
+  
+
+---
+
+  
+
+### 11. Exact String Matching for Safety
+
+  
+
+**Challenge**: Prevent accidental approvals.
+
+  
+
+**Anti-pattern**: Using keywords like "agree" (matches "disagree")
+
+  
+
+**Best practice**: Require exact phrase like "I agree to push this changes in working hours"
+
+  
+
+**Learning**: Exact phrase matching ensures deliberate, intentional approval. Not accidental click or partial comment.
+
+  
+
+---
+
+  
+
+### 12. GitHub Audit Trail
+
+  
+
+**Automatically Recorded**:
+
+- Username of actor
+
+- Exact timestamp (UTC)
+
+- Comment/label content
+
+- Event history
+
+  
+
+**NOT Recorded**:
+
+- Historical permission levels (API returns current state only)
+
+  
+
+**Learning**: Native GitHub features provide built-in audit trail. Perfect for compliance requirements without custom logging.
+
+  
+
+---
+
+  
+
+### 13. GitHub Actions Permissions (Least-Privilege)
+
+  
+
+**Challenge**: Knowing which permissions are truly needed.
+
+  
+
+**Key Rules**:
+
+- PRs are issues in GitHub API
+
+- BUT: `pull_request` events include labels in webhook payload
+
+- No need for `issues: read` if using `context.payload.pull_request.labels`
+
+  
+
+**Permission Types**:
+
+- `contents: read` - Read repository files
+
+- `issues: read` - Read issues/labels (only if making API calls)
+
+- `pull-requests: write` - Comment on PRs, update status
+
+- `issues: write` - Create/edit issues, add labels
+
+  
+
+**Best Practice**:
+
+7. Check webhook payload first
+
+8. Only add permissions for actual API calls
+
+9. Explicitly declare minimum required permissions
+
+  
+
+**Learning**: Webhook payload optimization can eliminate permission requirements. Always check `context.payload` before adding permissions.
+
+  
+
+---
+
+  
+
+### 14. Workflow Step Execution Order
+
+  
+
+**Challenge**: Failed step stops workflow, subsequent steps don't run.
+
+  
+
+**Problem Pattern**:
+
+- Check condition
+
+- Fail (exit 1) ← Workflow stops here
+
+- Post comment ← Never runs
+
+  
+
+**Solution**: Post comments/feedback BEFORE failing:
+
+- Check condition
+
+- Post comment ← Runs first
+
+- Fail (exit 1) ← Runs last
+
+  
+
+**Learning**: User-facing steps (comments, notifications) should run before `exit 1`. Otherwise users don't see guidance on how to fix the issue.
+
+  
+
+---
+
+  
+
+### 15. Filtering Label Events to Specific Labels
+
+  
+
+**Challenge**: Triggering on `labeled`/`unlabeled` runs workflow for ANY label change.
+
+  
+
+**Problem**: Wasteful CI runs when unrelated labels (e.g., `bug`, `enhancement`) are added.
+
+  
+
+**Solution**: Add job-level condition to filter by specific label name.
+
+  
+
+**Impact**:
+
+- Saves CI resources
+
+- Reduces workflow noise
+
+- Faster feedback (fewer queued runs)
+
+  
+
+**Learning**: When using `labeled`/`unlabeled` triggers, always filter by specific label name using `github.event.label.name` condition to avoid unnecessary workflow runs.
+
+  
+
+---
+
+  
+
+### 16. Using Webhook Payload vs API Calls
+
+  
+
+**Challenge**: Making API call to get data already in webhook payload.
+
+  
+
+**Problem**: `pull_request` events include labels in payload. Making `issues.listLabelsOnIssue()` API call is redundant.
+
+  
+
+**Comparison**:
+
+  
+
+| Approach | Speed | Rate Limits | Permissions Needed |
+
+|----------|-------|-------------|-------------------|
+
+| API call | Slower | Yes | `issues: read` |
+
+| Webhook payload | Instant | No | None (already in context) |
+
+  
+
+**Benefits of Payload**:
+
+- No API call = faster execution
+
+- No rate limit risk
+
+- Fewer permissions needed
+
+- Simpler code
+
+  
+
+**Learning**: Always check webhook payload first before making API calls. Most PR data (labels, comments, files changed, etc.) is already included in the event payload. API calls should be last resort.
+
+  
+
+---
+
+  
+
+## Design Principles
+
+  
+
+### 1. Explicit Intent
+
+Must type full phrase, not just click a button. Ensures deliberate, informed decision.
+
+  
+
+### 2. Fail-Safe
+
+Default to blocking during work hours. Require active approval to proceed.
+
+  
+
+### 3. Authorization Built-In
+
+Verify write access programmatically. Prevent unauthorized approvals.
+
+  
+
+### 4. Visibility
+
+Approval happens in PR conversation. Clear to all stakeholders, not hidden in logs.
+
+  
+
+### 5. Self-Service
+
+Any authorized team member can approve. No single point of failure or bottleneck.
+
+  
+
+### 6. Audit Trail
+
+Leverage GitHub's native tracking. Who, when, what phrase was used.
+
+  
+
+---
+
+  
+
+## Common Pitfalls
+
+  
+
+| Pitfall | Why It Happens | Solution |
+
+|---------|----------------|----------|
+
+| **Wrong timezone** | GitHub runners use UTC | Use `TZ="America/New_York"` with `date` |
+
+| **Loose string matching** | Using keywords instead of exact phrase | Use exact phrase: `comment.body.includes(exactPhrase)` |
+
+| **Issue + PR confusion** | `issue_comment` fires for both | Filter: `github.event.issue.pull_request != null` |
+
+| **Status not re-running (comment)** | Comment event doesn't trigger PR checks | Empty commit or label manipulation |
+
+| **Missing `labeled` event** | Forgetting to include in triggers | Add `labeled, unlabeled` to PR triggers |
+
+| **Missing target branch** | Comment event doesn't include PR details | Fetch PR: `github.rest.pulls.get()` |
+
+| **Accidental approvals** | Click-based approvals (labels) | Require typed phrase for deliberate intent |
+
+| **Authorization bypass** | Not checking permissions | Verify via `getCollaboratorPermissionLevel()` |
+
+| **Missing `issues: read`** | Calling `issues.listLabelsOnIssue()` without permission | Use `context.payload.pull_request.labels` instead |
+
+| **Comment after fail** | `exit 1` stops workflow before comment | Post comment BEFORE failure step |
+
+| **Unfiltered label events** | `labeled`/`unlabeled` trigger on ANY label | Filter by specific label: `github.event.label.name == 'target-label'` |
+
+| **Unnecessary API calls** | Making API calls for data in payload | Check `context.payload` first |
+
+  
+
+---
+
+  
+
+## Best Practices
+
+  
+
+✅ **Use timezone-aware date commands** for accurate time checks
+
+✅ **Verify authorization** before accepting approvals
+
+✅ **Provide immediate UX feedback** (emoji reactions + comments)
+
+✅ **Filter workflows by target branch** (e.g., production only)
+
+✅ **Separate concerns**: One workflow blocks, another unblocks
+
+✅ **Use exact phrase matching** for approval (not fuzzy keywords)
+
+✅ **Leverage native GitHub features** for audit trail
+
+✅ **Use webhook payload over API calls** - check `context.payload` first
+
+✅ **Filter label events by name** - avoid unnecessary runs
+
+✅ **Post feedback before failing** - comments/notifications before `exit 1`
+
+✅ **Test edge cases**: Different timezones, unauthorized users, typos
+
+  
+
+---
+
+  
+
+## Decision Rationale Summary
+
+  
+
+| Requirement | Label-Based | Comment-Based | Winner |
+
+|-------------|-------------|---------------|--------|
+
+| **Explicit confirmation** | Clicking label | Typing full phrase | 🏆 Comment |
+
+| **Auto re-run check** | ✅ Yes (`labeled` event) | ❌ No (manual) | 🏆 Label |
+
+| **Audit trail** | Who + when | Who + when + exact phrase | 🏆 Comment |
+
+| **Authorization** | GitHub permissions | Programmatic API check | 🏆 Comment |
+
+| **UX simplicity** | One click | Type + manual re-trigger | 🏆 Label |
+
+| **Accidental approval prevention** | Easy to misclick | Must type exact phrase | 🏆 Comment |
+
+| **Healthcare compliance** | Good | Explicit intent captured | 🏆 Comment |
+
+  
+
+**Overall**: Comment-based chosen for **explicit intent + audit trail** despite worse UX (manual re-trigger). Label-based is solid alternative for less-critical workflows.
+
+  
+
+---
+
+  
+
+## Real-World Use Cases
+
+  
+
+### Use Case 1: Changeset Check with Label Bypass
+
+  
+
+**Problem**: Require changeset files in PRs, but allow bypass for non-code changes.
+
+  
+
+**Pattern**: Check for file → If missing, check for bypass label → Fail if both missing
+
+  
+
+**Flow**:
+
+10. PR opened → Check for changeset file
+
+11. If missing → Check for `no-changeset-required` label
+
+12. If BOTH missing → Fail + comment
+
+13. If label added → Auto re-runs → Passes
+
+  
+
+**Why label-based**:
+
+- Auto re-trigger when label added
+
+- Clear visual indicator
+
+- Easy to add/remove
+
+- Good for optional requirements with escape hatch
+
+  
+
+**Learning**: Label bypass pattern works well for enforced-by-default checks that need occasional exceptions.
+
+  
+
+---
+
+  
+
+### Use Case 2: Production Merge Approval
+
+  
+
+```
+
+Timeline: Tuesday, 10:45 AM ET
+
+  
+
+10:45 AM - Developer opens PR to production
+
+├── Workflow detects Boston work hours
+
+├── Searches comments for approval phrase (not found)
+
+├── Status check FAILS
+
+└── Bot comments with instructions
+
+  
+
+11:02 AM - Team Lead comments: "I agree to push this changes in working hours"
+
+├── Approval workflow triggers
+
+├── Verifies Team Lead has 'admin' role ✅
+
+├── Reacts with 👍
+
+└── Posts: "Merge approved by @team-lead"
+
+  
+
+11:03 AM - Developer pushes empty commit to re-trigger
+
+└── Status check re-runs
+
+  
+
+11:03 AM - Merge Guard workflow
+
+├── Detects work hours
+
+├── Finds approval comment ✅
+
+├── Status check PASSES
+
+└── PR can be merged
+
+  
+
+11:05 AM - PR merged to production
+
+```
+
+  
+
+---
+
+  
+
+## When to Use Each Approach
+
+  
+
+| Use Case | Recommended Approach |
+
+|----------|---------------------|
+
+| Simple approval, low stakes | Label-based |
+
+| Deployment gates (not merge) | GitHub Environments |
+
+| Explicit confirmation required | **Comment-based** ✅ |
+
+| Regulated environments (healthcare, finance) | **Comment-based** ✅ |
+
+| Just time blocking, no approval | Time-based auto-block |
+
+| Multi-stage approvals | GitHub Environments + branch protection |
+
+  
+
+---
+
+  
+
+## Quick Reference
+
+  
+
+### Key APIs
+
+  
+
+| Need | API | Returns |
+
+|------|-----|---------|
+
+| **Check PR labels** | `issues.listLabelsOnIssue()` | Array of label objects |
+
+| **Get PR comments** | `issues.listComments()` | Array of comment objects |
+
+| **Get user permission** | `repos.getCollaboratorPermissionLevel()` | Permission level string |
+
+| **React to comment** | `reactions.createForIssueComment()` | Reaction object |
+
+| **Get PR details** | `pulls.get()` | Full PR object with base/head refs |
+
+  
+
+### Key Workflow Patterns
+
+  
+
+| Pattern | Trigger Types | When to Use |
+
+|---------|--------------|-------------|
+
+| **Label-based approval** | `[opened, labeled, unlabeled]` | Optional bypass, auto re-trigger needed |
+
+| **Comment-based approval** | `pull_request` + `issue_comment` | Explicit intent required, regulated environments |
+
+| **Time-based check** | `[opened, synchronize]` | Business hours restrictions |
+
+| **Branch-specific** | Add `branches: [name]` | Apply controls to specific branch only |
+
+  
+
+### Key Learnings
+
+  
+
+✅ **Labels** → Auto re-trigger via `labeled` event
+
+✅ **Comments** → Need manual re-trigger (empty commit)
+
+✅ **PRs are Issues** → Use issues API for labels/comments
+
+✅ **Timezone** → Always use `TZ` env var
+
+✅ **Filter PRs** → Check `github.event.issue.pull_request != null`
+
+✅ **Authorization** → Verify programmatically, don't trust alone
+
+✅ **Webhook Payload** → Use `context.payload` instead of API calls
+
+✅ **Filter Labels** → Check `github.event.label.name` for specific labels
+
+✅ **Step Order** → Post comments before `exit 1`
+
+  
+  
+
+---
+
+  
+
+## Implementation Evolution
+
+  
+
+### Initial Implementation
+
+- Comment-based approval for production branch
+
+- Required `issues: read` permission
+
+- Ran on all label changes
+
+- Failed before posting comments
+
+  
+
+### Optimization Phase 1 (Copilot Feedback)
+
+**Issue**: Comment step never ran because workflow failed first
+
+**Fix**: Reordered steps - post comment BEFORE exit 1
+
+**Learning**: User-facing steps must precede failure
+
+  
+
+### Optimization Phase 2 (Copilot Feedback)
+
+**Issue**: Missing `issues: read` permission for label API call
+
+**Fix**: Added permission to workflow
+
+**Learning**: Explicit permissions needed for API calls
+
+  
+
+### Optimization Phase 3 (Copilot Feedback)
+
+**Issue**: Unnecessary API call for data in payload
+
+**Fix**: Changed from `issues.listLabelsOnIssue()` to `context.payload.pull_request.labels`
+
+**Result**: Removed `issues: read` permission, faster execution
+
+  
+
+### Optimization Phase 4 (Copilot Feedback)
+
+**Issue**: Workflow runs on ALL label changes (wasteful)
+
+**Fix**: Added job-level filter for specific label name
+
+**Result**: Reduced unnecessary CI runs by ~90%
+
+  
+
+### Final State
+
+- Optimized permissions (only what's needed)
+
+- Efficient (no unnecessary API calls)
+
+- Clean UX (comments before failure)
+
+- Resource-efficient (filtered label events)
+
+  
+
+---
+
+  
+
+## References
+
+  
+
+- [GitHub Actions: Workflow triggers](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows)
+
+- [GitHub REST API: Issues/Comments](https://docs.github.com/en/rest/issues/comments)
+
+- [GitHub REST API: Pull Requests](https://docs.github.com/en/rest/pulls/pulls)
+
+- [GitHub REST API: Collaborators](https://docs.github.com/en/rest/collaborators/collaborators)
+
+- [GitHub Actions: Contexts](https://docs.github.com/en/actions/learn-github-actions/contexts)
+
+- [Branch Protection Rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)
+
+  
+
+---
+
+  
+
+## Evolution: Comment-Based → Label-Based (2026-04-14)
+
+  
+
+### Why We Migrated
+
+  
+
+After production use of comment-based approval, we identified these pain points:
+
+  
+
+14. **Manual re-trigger needed** - Required empty commit or manual action
+
+15. **Hidden state** - Approval buried in comment thread
+
+16. **Inconsistent with changeset pattern** - Already using labels for `no-changeset-required`
+
+  
+
+### New Label-Based Pattern
+
+  
+
+**Key Change**: Use `allow-deploy-in-working-hours` label instead of comment phrase.
+
+  
+
+| Aspect | Comment-Based | Label-Based |
+
+|--------|---------------|-------------|
+
+| Approval method | Type exact phrase | Add label |
+
+| Re-trigger | Manual (empty commit) | Automatic ✅ |
+
+| State visibility | Comments (hidden) | Label (visible) ✅ |
+
+| Consistency | Event-driven | State-driven ✅ |
+
+  
+
+### Technical Improvements
+
+  
+
+17. **Webhook Payload Usage**
+
+```yaml
+
+# Uses payload directly, no API call
+
+LABELS='${{ toJSON(github.event.pull_request.labels.*.name) }}'
+
+HAS_OVERRIDE=$(echo "$LABELS" | jq 'any(. == "allow-deploy-in-working-hours")')
+
+```
+
+  
+
+18. **Auto Re-trigger**
+
+```yaml
+
+on:
+
+pull_request:
+
+types: [opened, synchronize, labeled, unlabeled] # labeled triggers re-run
+
+```
+
+  
+
+19. **No Extra Permissions**
+
+- Comment-based: `issues: write`, `pull-requests: write`
+
+- Label-based: No permissions needed (uses payload)
+
+  
+
+### Migration Path
+
+  
+
+New workflow: `.github/workflows/production-deploy-guard.yml`
+
+  
+
+Old workflows (can be deprecated):
+
+- `.github/workflows/merge-guard.yml`
+
+- `.github/workflows/merge-approval.yml`
+
+  
+
+**Note**: Both can coexist during transition period.
+
+  
+
+### Preserved Features
+
+  
+
+✅ Time-based blocking (9 AM - 6 PM ET)
+
+✅ Authorization (write access required)
+
+✅ Audit trail (GitHub tracks label history)
+
+✅ Auto-comments (instructions + acknowledgment)
+
+✅ Branch-specific (production only)
+
+  
+
+### Trade-offs
+
+  
+
+| Lost (from comment-based) | Gained (label-based) |
+
+|---------------------------|---------------------|
+
+| Explicit typed confirmation | Auto re-trigger ✅ |
+
+| - | Visual state (label) ✅ |
+
+| - | Consistency with changeset pattern ✅ |
+
+  
+
+**Decision**: Label-based better fits the codebase pattern of "state over events."
+
+  
+
+### Lessons Learned
+
+  
+
+20. **Start with payload** - Always check `context.payload` before adding API calls
+
+21. **Consistency matters** - Use same pattern across workflows (labels for state)
+
+22. **UX wins** - Auto re-trigger is huge UX improvement over manual empty commits
+
+23. **State > Events** - Labels represent current state, easier to reason about than event history
+
+  
+
+---
 
