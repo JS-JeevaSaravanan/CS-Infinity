@@ -3,13 +3,13 @@
 To install dependencies:
 
 ```bash
-bun install
+bun ready
 ```
 
 To run server:
 
 ```bash
-bun run
+bun serve
 ```
 
 To test code:

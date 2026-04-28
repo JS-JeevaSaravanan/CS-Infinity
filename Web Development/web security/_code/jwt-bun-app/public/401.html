@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Unauthorized</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                margin-top: 100px;
+                background-color: #f8f8f8;
+                color: #333;
+            }
+            h1 {
+                font-size: 48px;
+                margin-bottom: 16px;
+            }
+            p {
+                font-size: 18px;
+                margin-bottom: 32px;
+            }
+            a {
+                display: inline-block;
+                padding: 12px 24px;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                border-radius: 6px;
+                font-weight: bold;
+            }
+            a:hover {
+                background-color: #0056b3;
+            }
+        </style>
+        <script>
+            // Redirect to login after 5 seconds
+            setTimeout(() => {
+                window.location.href = "/login";
+            }, 5000);
+        </script>
+    </head>
+    <body>
+        <h1>401 Unauthorized</h1>
+        <p>You do not have permission to view this page.</p>
+        <p>Redirecting to <a href="/login">Login</a>...</p>
+    </body>
+</html>
