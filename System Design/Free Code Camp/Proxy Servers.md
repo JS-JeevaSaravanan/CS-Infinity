@@ -153,3 +153,38 @@ A **proxy server** acts as an intermediary between a client and the internet, fo
 
 - A corporate network uses a proxy to filter out non-work-related websites and log employee browsing activities.
 
+
+
+
+# Reverse Proxy vs Forward Proxy
+
+---
+
+## Forward Proxy
+
+Acts on behalf of clients.
+
+### Used For
+
+- Privacy
+- Content filtering
+- Caching
+    
+
+---
+
+## Reverse Proxy
+
+Acts on behalf of servers.
+
+### Used For
+
+- Load balancing
+- SSL termination
+- Security
+
+
+### Important Point
+
+Most load balancers are reverse proxies.
+
