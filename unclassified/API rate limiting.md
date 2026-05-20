@@ -278,4 +278,206 @@ https://smudge.ai/blog/ratelimit-algorithms
 
 
 
+---
 
+A rate limiter usually stores counters with an **expiry/TTL**, so you **don’t manually clear limits inside middleware flow** in most production systems.
+
+## Common approaches
+
+### 1. In-memory map + cleanup timer
+
+Simple for single-instance apps.
+
+```js
+const limits = new Map();
+
+function rateLimit(req, res, next) {
+  const ip = req.ip;
+  const now = Date.now();
+
+  let entry = limits.get(ip);
+
+  if (!entry || entry.resetTime < now) {
+    entry = { count: 1, resetTime: now + 60000 };
+    limits.set(ip, entry);
+    return next();
+  }
+
+  if (entry.count >= 100) {
+    return res.status(429).send("Too many requests");
+  }
+
+  entry.count++;
+  next();
+}
+
+// async cleanup
+setInterval(() => {
+  const now = Date.now();
+
+  for (const [key, val] of limits) {
+    if (val.resetTime < now) {
+      limits.delete(key);
+    }
+  }
+}, 60000);
+```
+
+### Pros
+
+- Easy
+    
+- Fast
+    
+
+### Cons
+
+- Memory leak risk if cleanup fails
+    
+- Doesn't work across multiple servers/pods
+    
+- Lost on restart
+    
+
+Used only for:
+
+- local dev
+    
+- tiny internal apps
+    
+
+---
+
+# 2. Middleware clears expired entries inline
+
+Cleanup happens during request handling.
+
+```js
+if (entry.resetTime < now) {
+   limits.delete(ip);
+}
+```
+
+### Pros
+
+- No background job
+    
+
+### Cons
+
+- Cleanup only for active keys
+    
+- Old inactive keys remain forever
+    
+- Middleware becomes heavier
+    
+
+Usually not ideal alone.
+
+---
+
+# 3. Redis with TTL (MOST COMMON / BEST)
+
+Production-grade approach.
+
+```js
+const key = `rate:${ip}`;
+
+const count = await redis.incr(key);
+
+if (count === 1) {
+   await redis.expire(key, 60);
+}
+
+if (count > 100) {
+   return res.status(429).send("Too many requests");
+}
+```
+
+Redis automatically removes expired keys.
+
+### Why this is best
+
+- No manual cleanup
+    
+- Distributed (works across pods/servers)
+    
+- Memory managed by Redis
+    
+- Atomic operations
+    
+- Extremely scalable
+    
+
+This is what most real systems use:
+
+- API gateways
+    
+- SaaS backends
+    
+- auth systems
+    
+- cloud platforms
+    
+
+---
+
+# 4. Sliding window / token bucket using Redis + Lua
+
+More accurate and smoother limiting.
+
+Used by:
+
+- high-scale APIs
+    
+- payment systems
+    
+- cloud infra
+    
+
+Usually implemented with:
+
+- Redis sorted sets
+    
+- Lua scripts
+    
+- leaky bucket/token bucket algorithms
+    
+
+More complex but best for precision.
+
+---
+
+# Recommendation
+
+|Scale|Best Approach|
+|---|---|
+|Local/dev|In-memory Map|
+|Small single server|Map + periodic cleanup|
+|Production|Redis TTL|
+|High scale APIs|Redis token bucket/sliding window|
+
+---
+
+# Key design principle
+
+**Middleware should mostly enforce limits, not manage garbage collection.**
+
+Cleanup is ideally:
+
+- handled automatically via TTL
+    
+- or by background cleanup process
+    
+
+NOT tightly coupled to request flow.
+
+That keeps middleware:
+
+- fast
+    
+- deterministic
+    
+- low latency
+    
+- stateless-ish
