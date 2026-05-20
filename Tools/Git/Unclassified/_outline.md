@@ -7,3 +7,6 @@
 [[Delete branches]]
 
 [[branch rename]]
+
+
+[[stacked PRs]]
