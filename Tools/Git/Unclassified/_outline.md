@@ -12,3 +12,6 @@
 [[stacked PRs]]
 
 [[Git workings]]
+
+[[SignOff]]
+
