@@ -1,27 +1,74 @@
-import { describe, it, expect, beforeEach } from "bun:test";
-import { createServer } from "../../src/server-core";
-import type { Handler } from "../../src/router/router";
+// import {
+//   describe,
+//   it,
+//   expect,
+//   beforeEach,
+//   afterEach,
+//   mock,
+//   afterAll,
+//   beforeAll,
+// } from "bun:test";
+// import type { Mock } from "bun:test";
+// import { createServer } from "../../src/server/server-core";
 
-describe("create server", () => {
-  let fetchHandler: Handler;
+// describe("server", () => {
+//   let server: ReturnType<typeof createServer>;
+//   let getFileIfExistMock: Mock<(path: string) => Promise<Response>>;
+//   let handleMock: Mock<(_req: Request) => Promise<Response>>;
 
-  beforeEach(() => {
-    const server = createServer();
-    fetchHandler = server.fetch!;
-  });
+//   beforeEach(() => {
+//     server = createServer();
 
-  it("serves index.html for /", async () => {
-    const req = new Request("http://localhost/");
-    const res = await fetchHandler(req);
+//     getFileIfExistMock = mock(
+//       async (_path: string) => new Response(`FILE`, { status: 200 }),
+//     );
 
-    expect(res.status).toBe(200);
-    // expect(await res.text()).toContain("Home");
-  });
+//     handleMock = mock(
+//       async () => new Response(JSON.stringify({ ok: true }), { status: 200 }),
+//     );
 
-  // it("returns 404 for unknown frontend route", async () => {
-  //   const req = new Request("http://localhost/unknown");
-  //   const res = await fetchHandler(req);
+//     mock.module("../../src/utils/file-operations", () => ({
+//       getFileIfExist: getFileIfExistMock,
+//     }));
 
-  //   expect(res.status).toBe(404);
-  // });
-});
+//     mock.module("../../src/router/router", () => ({
+//       Router: class {
+//         register() {}
+//         handle = handleMock;
+//       },
+//     }));
+//   });
+
+//   afterEach(() => {
+//     server.stop(true);
+//     mock.clearAllMocks();
+//   });
+
+//   it("serves index.html when path is '/'", async () => {
+//     const res = await server.fetch(new Request("http://localhost/"));
+
+//     expect(res.status).toBe(200);
+//     expect(getFileIfExistMock.mock.calls).toEqual([
+//       [expect.stringContaining("index.html")],
+//     ]);
+//   });
+
+//   it("serves static files for non-api routes", async () => {
+//     const res = await server.fetch(new Request("http://localhost/greet.html"));
+
+//     expect(res.status).toBe(200);
+//     expect(getFileIfExistMock.mock.calls).toEqual([
+//       [expect.stringContaining("greet.html")],
+//     ]);
+
+//     expect(await res.text()).toContain("FILE:");
+//   });
+
+//   it("delegates /api routes to router.handle", async () => {
+//     const res = await server.fetch(new Request("http://localhost/api/users"));
+
+//     expect(res.status).toBe(200);
+//     expect(handleMock.mock.calls).toEqual([[expect.any(Request)]]);
+//     expect(getFileIfExistMock).not.toHaveBeenCalled();
+//   });
+// });

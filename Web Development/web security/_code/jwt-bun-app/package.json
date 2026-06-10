@@ -3,10 +3,12 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "install": "bun install",
+    "ready": "bun install",
     "serve": "bun run src/server.ts",
+    "serve:watch": "bun --watch src/server.ts",
     "test": "bun test",
-    "test:coverage": "bun test --coverage"
+    "test:coverage": "bun test --coverage",
+    "test:specific": "bun test --filter"
   },
   "devDependencies": {
     "@types/bun": "latest"

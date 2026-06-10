@@ -2,12 +2,24 @@ import type { HTTPMethod } from "../types/http";
 import { NotFoundResponse } from "../utils/http-response";
 
 export type Handler = (req: Request) => HandlerResponse;
-type HandlerResponse = Promise<Response> | Response;
+export type HandlerResponse = Promise<Response> | Response;
+
 export type Route = {
   method: HTTPMethod;
   path: string;
   handler: Handler;
 };
+
+export const withErrorHandling =
+  (handler: Handler): Handler =>
+  async (req) => {
+    try {
+      return await handler(req);
+    } catch (err) {
+      console.error(err);
+      return new Response("Internal Server Error", { status: 500 });
+    }
+  };
 
 export class Router {
   private routes: Route[] = [];
@@ -17,14 +29,17 @@ export class Router {
   }
 
   async handle(req: Request): Promise<Response> {
-    const findMatchRoute = (route: Route) =>
-      req.method === route.method && new URL(req.url).pathname === route.path;
+    const pathname = new URL(req.url).pathname;
 
-    const matchRoute = this.routes.find(findMatchRoute);
+    const matchRoute = this.routes.find(
+      (route) => route.method === req.method && route.path === pathname,
+    );
+
     if (matchRoute) {
-      return await matchRoute.handler(req);
+      const safeHandler = withErrorHandling(matchRoute.handler);
+      return await safeHandler(req);
     }
 
-    return NotFoundResponse;
+    return NotFoundResponse; // 404 fallback
   }
 }

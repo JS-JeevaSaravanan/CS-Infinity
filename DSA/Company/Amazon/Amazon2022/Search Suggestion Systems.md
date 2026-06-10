@@ -11,7 +11,12 @@ Design a system that suggests at most three product names from `products` after 
 Suggested products should have a common prefix with `searchWord`.
 If there are more than three products with a common prefix, return the three lexicographically minimum products.
 
+**Lexicographically** means **alphabetical order**, just like words are ordered in a dictionary.
+
 Return a list of lists of the suggested products after each character of `searchWord` is typed.
+
+https://leetcode.com/problems/search-suggestions-system/
+
 
 ### Examples
 
@@ -233,3 +238,77 @@ for more - see above line discussion section
 
 
 
+Temp
+
+repl.it
+
+```
+from typing import List
+
+
+def main():
+
+    def suggested_products(prodcuts: List[str],
+                           searchWord: str) -> List[List[str]]:
+        sorted_products = sorted(prodcuts)
+        print("# sorted products", sorted_products)
+
+        start_index = 0
+        end_index = len(searchWord) - 1
+
+        ans = []
+        for i in range(len(searchWord)):
+
+            subWord = searchWord[0:i + 1]
+            subset = sorted_products[start_index:end_index + 1]
+            print('subword', subWord, 'subset', subset)
+
+            temp_start_index = -1
+            for j in range(len(subset)):
+                word = subset[j]
+                if (word.startswith(subWord)):
+                    temp_start_index = j
+                    break
+
+            if (temp_start_index == -1):
+                ans.append([])
+                continue
+
+            start_index = temp_start_index
+
+            temp_end_index = -1
+
+            for k in range(len(subset) - 1, start_index, -1):
+                word = subset[k]
+                if (word.startswith(subWord)):
+                    temp_end_index = len(subset) - k
+                    break
+
+        return []
+
+    test_data_set = [{
+        "input": {
+            "products": ["mobile", "mouse", "moneypot", "monitor", "mousepad"],
+            "searchWord": "mouse",
+        },
+        "output": [["mobile", "moneypot", "monitor"],
+                   ["mobile", "moneypot", "monitor"], ["mouse", "mousepad"],
+                   ["mouse", "mousepad"], ["mouse", "mousepad"]]
+    }]
+
+    for test_data in test_data_set:
+        input_products = test_data["input"]["products"]
+        input_searchWord = test_data["input"]["searchWord"]
+        output = test_data["output"]
+
+        result = suggested_products(input_products, input_searchWord)
+
+        print("### ", result)
+
+        if (result != output):
+            print("failed")
+
+
+main()
+
+```
