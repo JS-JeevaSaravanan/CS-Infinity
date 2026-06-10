@@ -11,3 +11,4 @@
 
 
 [[git top commands]]
+[[git tags]]

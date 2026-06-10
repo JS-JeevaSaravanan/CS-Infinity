@@ -1,0 +1,21 @@
+{
+  "name": "jwt-bun-app",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "install": "bun install",
+    "serve": "bun run src/server.ts",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

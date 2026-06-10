@@ -13,6 +13,9 @@
 [[Throttling]]
 [[API rate limiting]]
 
+[[Permission handling]]
+
+
 [[Download Strategies]]
 
 
