@@ -3,7 +3,7 @@
 
 
 
-[[_refs]]
+[[Tech Stack/Elixir/_refs]]
 
 
 
@@ -11,8 +11,8 @@
 
 
 
-[[Intro]]
-[[Basics]]
+[[Tech Stack/Elixir/Intro]]
+[[Tech Stack/Elixir/Basics]]
 [[Data types]]
 [[I-O operations]]
 

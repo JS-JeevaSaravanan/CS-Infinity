@@ -77,5 +77,23 @@ d = deque([1, 2, 3])  # Creates a deque with initial elements
   d = deque(maxlen=3)  # Creates a deque that can hold at most 3 items
   ```
 
+
+```python
+from collections import deque
+
+d = deque(maxlen=3) 
+print(d) #=> deque([], maxlen=3)
+
+d.append(1)
+d.append(2)
+d.append(3)
+print(d) #=> deque([1, 2, 3], maxlen=3)
+
+d.append(4)
+print(d) #=> deque([2, 3, 4], maxlen=3)
+
+```
+
+
 These methods make `deque` a versatile data structure for various applications, especially when you need fast appends and pops from both ends.
 

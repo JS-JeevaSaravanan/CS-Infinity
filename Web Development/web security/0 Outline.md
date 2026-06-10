@@ -4,7 +4,7 @@
 [[Authorization keys]]
 [[web storages]]
 [[CORs]]
-[[JWT]]
+[[Web Development/web security/JWT]]
 
 [[too many requests]]
 

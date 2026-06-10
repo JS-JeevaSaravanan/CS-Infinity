@@ -3,7 +3,7 @@
 [[Vite full]]
 [[vite Q&As]]
 
-[[intro]]
+[[Web Development/Bundlers/Vite/intro]]
 
 [[core concepts]]
 [[envs - modes , variables]]

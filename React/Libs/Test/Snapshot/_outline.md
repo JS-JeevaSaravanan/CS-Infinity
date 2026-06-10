@@ -1,4 +1,4 @@
 
 
-[[intro]]
+[[React/Libs/Test/Snapshot/intro]]
 

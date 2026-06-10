@@ -10,7 +10,7 @@
 [[deep object equality issue]]
 
 [[mjs vs cjs]]
-[[object vs map]]
+[[JavaScript/JS Lang/UnClassified/object vs map]]
 
 
 [[error catching]]
