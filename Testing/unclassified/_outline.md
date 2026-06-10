@@ -6,3 +6,6 @@
 [[Synthetic testing]]
 
 
+[[Load and Stress Testing]]
+
+[[AI test]]

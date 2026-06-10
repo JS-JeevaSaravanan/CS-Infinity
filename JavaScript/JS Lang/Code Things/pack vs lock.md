@@ -88,3 +88,33 @@ For CI/CD pipelines, it’s essential that the same versions of dependencies are
 So yes, **pushing the lockfile** is important and a best practice in almost all scenarios.
 
 
+
+---
+
+pnpm install --frozen-lockfile=false Explained
+
+  Think of the lockfile like a recipe that remembers exact ingredient versions:
+
+  Normal pnpm install (frozen lockfile)
+
+  pnpm install  # Default: frozen-lockfile=true
+  - Reads pnpm-lock.yaml
+  - Installs exactly what's in the lockfile
+  - Ignores package.json version ranges like ^1.13.5
+  - Never changes the lockfile
+
+  Use when: Regular day-to-day work, CI/CD
+
+  ---
+  pnpm install --frozen-lockfile=false
+
+  pnpm install --frozen-lockfile=false
+  - Reads package.json version ranges (like ^1.13.5)
+  - Resolves new versions within those ranges
+  - Updates the lockfile with new resolutions
+  - Preserves the lockfile structure (doesn't delete it)
+
+  Use when: You changed package.json and want to update lockfile without deleting it
+
+---
+

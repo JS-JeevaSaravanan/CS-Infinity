@@ -12,3 +12,12 @@
 
 [[git top commands]]
 [[git tags]]
+[[branch rename]]
+
+
+[[stacked PRs]]
+
+[[Git workings]]
+
+[[SignOff]]
+

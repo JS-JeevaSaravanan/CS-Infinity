@@ -38,3 +38,5 @@
 
 [[Object.keys loss type]]
 
+
+[[Discriminated Unions in TypeScript]]

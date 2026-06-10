@@ -399,3 +399,58 @@ export class UserController {
 🔥 **Pro Tip:** Be prepared to explain **how Drizzle ORM improves performance and type safety compared to TypeORM!** 🚀
 
 
+---
+
+Yes — in Drizzle ORM, views can end up being re-created in generated migrations even when you modify unrelated tables, depending on how the schema snapshot changes.
+
+Typical reasons:
+
+- Drizzle compares the current schema definition with its previous snapshot.
+    
+- If a view depends on a table that changed, Drizzle may emit:
+    
+    ```sql
+    DROP VIEW ...
+    CREATE VIEW ...
+    ```
+    
+- Sometimes even formatting/order differences in generated SQL can trigger a view recreation.
+    
+
+This is especially common with:
+
+- `pgView(...)`
+    
+- materialized views
+    
+- views using `SELECT *`
+    
+- renamed columns/types/indexes in dependent tables
+    
+
+Example:
+
+```ts
+export const activeUsers = pgView("active_users").as((qb) =>
+  qb.select().from(users).where(eq(users.active, true))
+);
+```
+
+If `users` changes, Drizzle may regenerate the view migration.
+
+Ways to reduce unnecessary view regeneration:
+
+1. Avoid `SELECT *` in views
+    
+2. Keep view SQL deterministic
+    
+3. Use manual SQL migrations for stable views
+    
+4. Separate frequently-changing tables from view dependencies
+    
+5. Review generated migration before applying
+    
+
+You can safely edit generated migrations manually if the view recreation is unnecessary.
+
+---
