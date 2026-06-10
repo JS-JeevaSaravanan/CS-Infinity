@@ -22,5 +22,15 @@ https://go.dev/blog/error-handling-and-go
 rust handling
 https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html
 
+gleam result type
+https://www.youtube.com/watch?v=T3pcb3o415c
+
+
+error handling vs exceptions
+
+https://youtu.be/wrz409nQ4hc?si=9ZzDSyB78_ThGu9x
+
+https://youtu.be/Iflu9zEJipQ?si=7aCs8VhPSAFeGNU4
+
 
 

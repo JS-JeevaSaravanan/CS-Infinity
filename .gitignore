@@ -1,60 +1,86 @@
-# Dependencies (ignore everywhere)
+# ------------------------------------
+# Dependencies
+# ------------------------------------
 /node_modules/
-**/node_modules/
+**/node_modules
+**/.pnp
+**/.pnp.*
+**/.yarn/*
+!**/.yarn/patches
+!**/.yarn/plugins
+!**/.yarn/releases
+!**/.yarn/versions
 
-.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# ------------------------------------
+# Output / Build
+# ------------------------------------
+**/out
+**/dist
+**/build
+**/*.tgz
 
-# Testing
-/coverage
-**/coverage/
+# next.js
+**/.next
 
-# Next.js
-/.next/
-/out/
-**/.next/
-**/out/
+# ------------------------------------
+# Testing / Coverage
+# ------------------------------------
+**/coverage
+**/*.lcov
 
-# Production
-/build
-**/build/
-
-# Misc
-.DS_Store
-**/.DS_Store
-*.pem
-
-# Debug logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# ------------------------------------
+# Logs / Debug
+# ------------------------------------
+**/logs
 **/*.log
+**/*_*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-# Env files
-.env*
+# ------------------------------------
+# Environment variables
+# ------------------------------------
+**/.env
 **/.env*
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+**/.env.local
 
-# Vercel
-.vercel
-**/.vercel/
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
+# ------------------------------------
+# Cache / Temp
+# ------------------------------------
+**/.eslintcache
+**/.cache
 **/*.tsbuildinfo
-
-# Obsidian
-**/.obsidian/
-
-# Cache / temp files
-*.bak
-*.swp
-*.tmp
 **/*.bak
 **/*.swp
 **/*.tmp
+
+# ------------------------------------
+# TypeScript / Next.js
+# ------------------------------------
+**/next-env.d.ts
+
+# ------------------------------------
+# Vercel
+# ------------------------------------
+**/.vercel
+
+# ------------------------------------
+# IDEs / Editors
+# ------------------------------------
+**/.idea
+**/.obsidian
+
+# ------------------------------------
+# macOS / OS files
+# ------------------------------------
+**/.DS_Store
+
+# ------------------------------------
+# Security / Misc
+# ------------------------------------
+**/*.pem
