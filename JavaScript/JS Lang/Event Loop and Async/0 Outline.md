@@ -24,6 +24,8 @@ https://www.youtube.com/watch?v=RvYYCGs45L4
 [[CallBack, Promise & Async await]]
 
 
+[[Worker Threads]]
+
 
 
 
