@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl *)",
+      "Bash(npm view *)",
+      "Bash(pnpm run lint)",
+      "Bash(pnpm run lint:root)",
+      "Bash(pnpm run test:unit)",
+      "mcp__context7__query-docs",
+      "mcp__context7__resolve-library-id",
+      "mcp__atlassian-mcp__search-jira-issues",
+      "mcp__atlassian-mcp__get-jira-issue",
+      "mcp__github-mcp__pull_request_read",
+      "mcp__datadog-mcp__get-synthetics-result",
+      "mcp__datadog-mcp__list-rum-applications"
+    ]
+  }
+}
