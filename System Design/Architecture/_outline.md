@@ -1,3 +1,0 @@
-
-
-[[Bulk selection]]

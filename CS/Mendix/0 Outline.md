@@ -1,6 +1,0 @@
-
-
-[[Mendix widgets]]
-
-
-

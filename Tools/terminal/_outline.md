@@ -1,5 +1,0 @@
-
-
-[[linux commands]]
-
-[[file actions]]

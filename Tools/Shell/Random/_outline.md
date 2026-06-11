@@ -1,4 +1,0 @@
-
-
-[[env precedence order]]
-[[Shebang]]

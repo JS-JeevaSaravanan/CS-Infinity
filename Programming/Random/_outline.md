@@ -1,5 +1,0 @@
-
-
-[[switch vs lookups]]
-
-

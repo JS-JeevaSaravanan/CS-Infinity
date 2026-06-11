@@ -1,6 +1,0 @@
-
-
-
-[[Palindrome number]]
-
-

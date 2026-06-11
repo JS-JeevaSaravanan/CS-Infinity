@@ -1,0 +1,3 @@
+# Index
+
+- [[switch vs lookups]]

@@ -1,2 +1,0 @@
-
-[[material react table]]

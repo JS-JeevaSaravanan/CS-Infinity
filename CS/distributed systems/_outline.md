@@ -1,3 +1,0 @@
-
-
-[[CRDT - multi editing]]
