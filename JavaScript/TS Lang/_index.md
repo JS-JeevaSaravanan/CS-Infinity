@@ -3,6 +3,7 @@
 - [[_check]]
 - [[_others]]
 - [[_temp]]
+- [[Default Params and Destructuring]]
 - [[Generics]]
 - [[Non nullish]]
 - [[optional chaining]]
