@@ -1,4 +1,6 @@
 
+> Related: [[How Drizzle migrations work]] — how Drizzle decides what to run · [[Drizzle journal when timestamp]] — how a merge conflict in `_journal.json` can silently skip a migration.
+
 Nestjs migration:
 
 Perfect — since you're using **NestJS** with **Drizzle ORM**, here's how you can set up and run **migrations** cleanly within that context.
